@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DocMind — AI Document Intelligence</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="ambient-bg">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <div class="logo-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="logo-text">DocMind</span>
+        </div>
+        <button class="sidebar-toggle" id="sidebarToggle">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-view="upload">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+          </svg>
+          <span>Upload Docs</span>
+        </button>
+        <button class="nav-item" data-view="chat">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+          </svg>
+          <span>Chat</span>
+          <span class="badge" id="chatBadge" style="display:none">●</span>
+        </button>
+        <button class="nav-item" data-view="history">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <span>History</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-docs">
+        <div class="sidebar-section-label">LOADED DOCUMENTS</div>
+        <div id="sidebarDocList" class="sidebar-doc-list">
+          <div class="empty-hint">No documents yet</div>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="status-indicator" id="statusIndicator">
+          <div class="status-dot idle" id="statusDot"></div>
+          <span id="statusText">Ready</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="top-bar">
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        <div class="top-bar-title" id="topBarTitle">Upload Documents</div>
+        <div class="top-bar-actions">
+          <div class="doc-count-pill" id="docCountPill" style="display:none">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            </svg>
+            <span id="docCountText">0 docs</span>
+          </div>
+          <button class="btn-clear" id="clearAllBtn" style="display:none">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/>
+            </svg>
+            Clear All
+          </button>
+        </div>
+      </header>
+
+      <div class="views-container">
+
+        <!-- UPLOAD VIEW -->
+        <section class="view active" id="view-upload">
+          <div class="upload-zone-wrapper">
+            <div class="upload-zone" id="uploadZone">
+              <div class="upload-zone-inner">
+                <div class="upload-icon-ring">
+                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                  </svg>
+                </div>
+                <h2 class="upload-title">Drop PDFs here</h2>
+                <p class="upload-sub">or click to browse your files</p>
+                <div class="upload-formats">
+                  <span>PDF</span><span>Multi-file</span><span>Up to 50MB each</span>
+                </div>
+                <button class="btn-primary" id="uploadBtn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                  </svg>
+                  Browse Files
+                </button>
+                <input type="file" id="fileInput" accept=".pdf" multiple hidden />
+              </div>
+            </div>
+
+            <div class="processing-panel" id="processingPanel" style="display:none">
+              <div class="processing-header">
+                <div class="processing-spinner"></div>
+                <span id="processingLabel">Processing documents...</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" id="progressFill" style="width:0%"></div>
+              </div>
+              <div class="processing-steps" id="processingSteps"></div>
+            </div>
+          </div>
+
+          <div class="doc-grid" id="docGrid"></div>
+        </section>
+
+        <!-- CHAT VIEW -->
+        <section class="view" id="view-chat">
+          <div class="chat-layout">
+            <div class="chat-messages" id="chatMessages">
+              <div class="chat-welcome" id="chatWelcome">
+                <div class="welcome-orb">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/>
+                  </svg>
+                </div>
+                <h2>Ask anything about your documents</h2>
+                <p>Upload PDFs first, then start a conversation. I'll search across all your documents and cite exact sources.</p>
+                <div class="starter-questions" id="starterQuestions"></div>
+              </div>
+            </div>
+            <div class="chat-input-area">
+              <div class="chat-input-wrapper">
+                <textarea id="chatInput" placeholder="Ask a question about your documents..." rows="1"></textarea>
+                <button class="send-btn" id="sendBtn">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="chat-meta">
+                <span id="docsLoadedHint">No documents loaded — <button class="inline-link" data-view="upload">upload some first</button></span>
+                <span class="char-count" id="charCount"></span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- HISTORY VIEW -->
+        <section class="view" id="view-history">
+          <div class="history-panel">
+            <div class="history-header-row">
+              <h2>Conversation History</h2>
+              <button class="btn-outline" id="clearHistoryBtn">Clear History</button>
+            </div>
+            <div class="history-list" id="historyList">
+              <div class="empty-state">
+                <div class="empty-icon">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                </div>
+                <p>No conversation history yet</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    if (typeof pdfjsLib !== 'undefined') {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>
